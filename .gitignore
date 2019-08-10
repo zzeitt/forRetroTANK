@@ -1,0 +1,6 @@
+# Ignore visual studio files
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*/Debug/*
+.vs/*
