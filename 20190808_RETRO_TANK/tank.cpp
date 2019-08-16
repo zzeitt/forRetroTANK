@@ -389,6 +389,29 @@ int Tank::getBiuRowNum() {
   }
 }
 
+void Tank::checkBorders() {
+  if (cur_col <= 1) {
+    eraseTank();
+    cur_col = 2;
+    printTank();
+  }
+  if (cur_col >= COLS) {
+    eraseTank();
+    cur_col = COLS - 1;
+    printTank();
+  }
+  if (cur_row <= 1) {
+    eraseTank();
+    cur_row = 2;
+    printTank();
+  }
+  if (cur_row >= ROWS) {
+    eraseTank();
+    cur_row = ROWS - 1;
+    printTank();
+  }
+}
+
 bool Tank::checkWinning() {
   switch (cur_dir) {
     case 'w':

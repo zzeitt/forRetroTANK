@@ -109,5 +109,6 @@ class Tank {
   char getDirection();
   int getBiuColNum();
   int getBiuRowNum();
+  void checkBorders();
   bool checkWinning();
 };

@@ -30,6 +30,8 @@ void GameLoop::mainLoop() {
   char kb = '?';
   do {
     if (!tk.checkWinning()) {
+      ///////////// Check Borders /////////////
+      tk.checkBorders();
       ///////////// Handle Bullets /////////////
       if (!v_biu.empty()) {
         for (vector<Biu>::iterator it = v_biu.begin(); it != v_biu.end();) {
