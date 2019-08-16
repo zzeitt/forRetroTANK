@@ -1,8 +1,10 @@
 #pragma once
 
 /***** Constant Variables of Map *****/
-const int MARGIN_UP = 3;
-const int ROWS = 18, COLS = 42;
+const unsigned int MARGIN_UP = 4;
+const unsigned int MARGIN_BASELINE = 26;
+const unsigned int MARGIN_LEFT = 16;
+const unsigned int ROWS = 18, COLS = 42;
 
 /***** Static Map ******/
 static int MAP[ROWS + 1][COLS + 1] = {

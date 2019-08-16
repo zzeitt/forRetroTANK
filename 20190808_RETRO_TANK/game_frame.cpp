@@ -1,37 +1,39 @@
 #include "game_frame.h"
 
-void GameFrame::printChar(double col, double row, string str) {
-  gotoxy(2 * col, row + MARGIN_UP);
+void GameFrame::printChar(unsigned short col, unsigned short row, string str) {
+  gotoxy(2 * col + MARGIN_LEFT, row + MARGIN_UP);
   cout << str;
 }
 
-void GameFrame::printBlock(double col, double row) { printChar(col, row, "█"); }
-void GameFrame::printBlank(double col, double row) {
+void GameFrame::printBlock(unsigned short col, unsigned short row) {
+  printChar(col, row, "█");
+}
+void GameFrame::printBlank(unsigned short col, unsigned short row) {
   printChar(col, row, "  ");
 }
-void GameFrame::printWall(double col, double row) { printChar(col, row, "▓"); }
-void GameFrame::printStar(double col, double row) { printChar(col, row, "★"); }
-void GameFrame::printUnkown(double col, double row) {
+void GameFrame::printWall(unsigned short col, unsigned short row) {
+  printChar(col, row, "▓");
+}
+void GameFrame::printStar(unsigned short col, unsigned short row) {
+  printChar(col, row, "★");
+}
+void GameFrame::printUnkown(unsigned short col, unsigned short row) {
   printChar(col, row, "？");
 }
 
 void GameFrame::printFrame() {
-  gotoxy(0, 0);
-  cout << "                           你已成功进入坦克深渊，开战吧！！         "
-          "            "
-       << endl;
-  cout << "☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆" << endl;
-  cout << endl;
-  gotoxy(0, MARGIN_UP);
+  gotoxy(MARGIN_LEFT, 0);
+  cout << "                           你已成功进入坦克深渊，开战吧！";
+  gotoxy(MARGIN_LEFT, 1);
+  cout << "☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆";
+  gotoxy(MARGIN_LEFT, MARGIN_UP);
   for (int c = 0; c <= COLS + 1; c++) {
-    printBlock(c, 0);
+    printBlock(c, 0);  // upper border
+    printBlock(c, ROWS + 1);  // lower border
   }
   for (int i = 1; i <= ROWS + 1; i++) {
-    printBlock(0, i);
-    printBlock(COLS + 1, i);
-  }
-  for (int c = 0; c <= COLS + 1; c++) {
-    printBlock(c, ROWS + 1);
+    printBlock(0, i);  // left border
+    printBlock(COLS + 1, i);  // right border
   }
 }
 

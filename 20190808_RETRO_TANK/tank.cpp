@@ -1,67 +1,213 @@
 #include "tank.h"
 
-void Tank::printChar(double col, double row, string str) {
-  gotoxy(2 * col, row + MARGIN_UP);
+/******** Biu ********/
+Biu::Biu(char ch_dir, int c, int r) {
+  first_mark = true;
+  b_alife = true;
+  cur_dir = ch_dir;
+  cur_col = c;
+  cur_row = r;
+  speed = FAST;
+  type = biu_a;
+}
+
+Biu::Biu(char ch_dir, int c, int r, EnumSpeed v, BiuType t) {
+  first_mark = true;
+  b_alife = true;
+  cur_dir = ch_dir;
+  cur_col = c;
+  cur_row = r;
+  speed = v;
+  type = t;
+}
+
+void Biu::printChar(unsigned short col, unsigned short row, string str) {
+  gotoxy(2 * col + MARGIN_LEFT, row + MARGIN_UP);
   cout << str;
 }
 
-void Tank::printBlock(double col, double row) { printChar(col, row, "¨€"); }
-
-void Tank::printBlank(double col, double row) { printChar(col, row, "  "); }
-
-void Tank::printStar(double col, double row) { printChar(col, row, "¡ï"); }
-
-void Tank::printBiu(double col, double row) {
-  printChar(col, row, biu_type.ws_biu);
+void Biu::printBlock(unsigned short col, unsigned short row) {
+  printChar(col, row, "¨€");
 }
 
+void Biu::printBlank(unsigned short col, unsigned short row) {
+  printChar(col, row, "  ");
+}
+
+void Biu::printBiu() {
+  switch (cur_dir) {
+    case 'w':
+      printChar(cur_col, cur_row, type.ws_biu);
+      break;
+    case 's':
+      printChar(cur_col, cur_row, type.ws_biu);
+      break;
+    case 'a':
+      printChar(cur_col, cur_row, type.a_biu);
+      break;
+    case 'd':
+      printChar(cur_col, cur_row, type.d_biu);
+      break;
+  }
+}
+
+void Biu::eraseBiu() { printBlank(cur_col, cur_row); }
+
+bool Biu::checkGoing() {
+  if (MAP[cur_row][cur_col] == BLOCK || MAP[cur_row][cur_col] == WALL ||
+      MAP[cur_row][cur_col] == STAR) {
+    return false;
+  } else {
+    bool b_forward;
+    switch (cur_dir) {
+      case 'w':
+        b_forward = (N == BLANK);
+        break;
+      case 'a':
+        b_forward = (W == BLANK);
+        break;
+      case 's':
+        b_forward = (S == BLANK);
+        break;
+      case 'd':
+        b_forward = (E == BLANK);
+        break;
+      default:
+        b_forward = false;
+    }
+    return b_forward;
+  }
+}
+
+void Biu::move() {
+  if (cur_col >= 1 && cur_col <= COLS && cur_row >= 1 && cur_row <= ROWS) {
+    int duration;
+    if (first_mark) {  // If this is the first move.
+      time_this = high_resolution_clock::now();
+      duration = MAX_SPEED;
+    } else {
+      time_this = high_resolution_clock::now();
+      duration =
+          (int)duration_cast<milliseconds>(time_this - time_last).count();
+    }
+    if (duration >= (MAX_SPEED - speed)) {
+      if (checkGoing()) {  // If confront with BLANK.
+        eraseBiu();
+        switch (cur_dir) {
+          case 'w':
+            cur_row--;
+            break;
+          case 's':
+            cur_row++;
+            break;
+          case 'a':
+            cur_col--;
+            break;
+          case 'd':
+            cur_col++;
+            break;
+          default:
+            break;
+        }
+        printBiu();
+        time_last = time_this;
+        first_mark = false;
+      } else {  // If confront with non-BLANK.
+        // eraseBiu();
+        // handleHit();
+        b_alife = false;
+      }
+    }
+  } else {
+    b_alife = false;
+  }
+}
+
+bool Biu::isAlife() { return b_alife; }
+
+void Biu::handleDeath()
+{
+  if (!b_alife) {
+
+  }
+}
+
+/******** Tank ********/
 Tank::Tank() {
+  first_mark = true;
   cur_dir = 'w';
   cur_col = 20;
   cur_row = 9;
-  speed = veryfast;
+  speed = FAST;
   gun_type = gun_a;
-  biu_type = biu_a;
   printTank();
 }
 
-Tank::Tank(char ch_dir, int c, int r, EnumSpeed v, GunType gun, BiuType biu) {
+Tank::Tank(char ch_dir, int c, int r, EnumSpeed v, GunType gun) {
+  first_mark = true;
   cur_dir = ch_dir;
   cur_col = c;
   cur_row = r;
   speed = v;
   gun_type = gun;
-  biu_type = biu;
   printTank();
 }
 
+void Tank::printChar(unsigned short col, unsigned short row, string str) {
+  gotoxy(2 * col + MARGIN_LEFT, row + MARGIN_UP);
+  cout << str;
+}
+
+void Tank::printBlock(unsigned short col, unsigned short row) {
+  printChar(col, row, "¨€");
+}
+
+void Tank::printBlank(unsigned short col, unsigned short row) {
+  printChar(col, row, "  ");
+}
+
+void Tank::printWheelsVer(unsigned short col, unsigned short row) {
+  printChar(col - 1, row, "©¯");
+  printChar(col + 1, row, "©¯");
+}
+
+void Tank::printWheelsHor(unsigned short col, unsigned short row) {
+  printChar(col, row - 1, "¡­");
+  printChar(col, row + 1, "¡­");
+}
+
+void Tank::printGunVer(unsigned short col, unsigned short row) {
+  printChar(col, row, gun_type.ws_gun);
+}
+
+void Tank::printGunHor(unsigned short col, unsigned short row) {
+  printChar(col, row, gun_type.ad_gun);
+}
+
 void Tank::printTank() {
-  Sleep(200 - speed);
-  printBlock(cur_col, cur_row);
+  printBlock(cur_col, cur_row);  // Body of TANK.
   switch (cur_dir) {
     case 'w':
     case 's':
-      printChar(cur_col - 1, cur_row, "©¯");
-      printChar(cur_col + 1, cur_row, "©¯");
+      printWheelsVer(cur_col, cur_row);
       switch (cur_dir) {
         case 'w':
-          printChar(cur_col, cur_row - 1, gun_type.ws_gun);
+          printGunVer(cur_col, cur_row - 1);
           break;
         case 's':
-          printChar(cur_col, cur_row + 1, gun_type.ws_gun);
+          printGunVer(cur_col, cur_row + 1);
           break;
       }
       break;
     case 'a':
     case 'd':
-      printChar(cur_col, cur_row - 1, "¡­");
-      printChar(cur_col, cur_row + 1, "¡­");
+      printWheelsHor(cur_col, cur_row);
       switch (cur_dir) {
         case 'a':
-          printChar(cur_col - 1, cur_row, gun_type.ad_gun);
+          printGunHor(cur_col - 1, cur_row);
           break;
         case 'd':
-          printChar(cur_col + 1, cur_row, gun_type.ad_gun);
+          printGunHor(cur_col + 1, cur_row);
           break;
       }
       break;
@@ -69,39 +215,36 @@ void Tank::printTank() {
 }
 
 void Tank::eraseTank() {
-  Sleep(200 - speed);
   printBlank(cur_col, cur_row);
   switch (cur_dir) {
     case 'w':
     case 's':
-      printChar(cur_col - 1, cur_row, "  ");
-      printChar(cur_col + 1, cur_row, "  ");
+      printBlank(cur_col - 1, cur_row);
+      printBlank(cur_col + 1, cur_row);
       switch (cur_dir) {
         case 'w':
-          printChar(cur_col, cur_row - 1, "  ");
+          printBlank(cur_col, cur_row - 1);
           break;
         case 's':
-          printChar(cur_col, cur_row + 1, "  ");
+          printBlank(cur_col, cur_row + 1);
           break;
       }
       break;
     case 'a':
     case 'd':
-      printChar(cur_col, cur_row - 1, "  ");
-      printChar(cur_col, cur_row + 1, "  ");
+      printBlank(cur_col, cur_row - 1);
+      printBlank(cur_col, cur_row + 1);
       switch (cur_dir) {
         case 'a':
-          printChar(cur_col - 1, cur_row, "  ");
+          printBlank(cur_col - 1, cur_row);
           break;
         case 'd':
-          printChar(cur_col + 1, cur_row, "  ");
+          printBlank(cur_col + 1, cur_row);
           break;
       }
       break;
   }
 }
-
-void Tank::printWin() {}
 
 bool Tank::checkTurning(char dst_dir) {
   if (cur_dir == 'w' && dst_dir == 's') {
@@ -175,8 +318,88 @@ bool Tank::checkGoing() {
       b_forward =
           (NE == BLANK) * (ES == BLANK) * (MAP[cur_row][cur_col + 2] == BLANK);
       break;
+    default:
+      b_forward = false;
   }
   return b_forward;
+}
+
+void Tank::move(char dst_dir) {
+  double duration;
+  if (first_mark) {  // If this is the first move.
+    time_this = high_resolution_clock::now();
+    duration = MAX_SPEED;
+  } else {
+    time_this = high_resolution_clock::now();
+    duration = (int)duration_cast<milliseconds>(time_this - time_last).count();
+  }
+  if (duration >= (MAX_SPEED - speed)) {
+    if (dst_dir == cur_dir) {
+      if (checkGoing()) {
+        eraseTank();
+        switch (cur_dir) {
+          case 'w':
+            cur_row--;
+            break;
+          case 's':
+            cur_row++;
+            break;
+          case 'a':
+            cur_col--;
+            break;
+          case 'd':
+            cur_col++;
+            break;
+        }
+        printTank();
+        time_last = time_this;
+        first_mark = false;
+      }
+    } else {
+      if (dst_dir == 'w' || dst_dir == 'a' || dst_dir == 's' ||
+          dst_dir == 'd') {
+        if (checkTurning(dst_dir)) {
+          eraseTank();
+          cur_dir = dst_dir;
+          printTank();
+          time_last = time_this;
+          first_mark = false;
+        }
+      }
+    }
+  }
+}
+
+char Tank::getDirection() { return cur_dir; }
+
+int Tank::getBiuColNum() {
+  switch (cur_dir) {
+    case 'w':
+      return cur_col;
+    case 's':
+      return cur_col;
+    case 'a':
+      return cur_col - 2;
+    case 'd':
+      return cur_col + 2;
+    default:
+      return 0;
+  }
+}
+
+int Tank::getBiuRowNum() {
+  switch (cur_dir) {
+    case 'w':
+      return cur_row - 2;
+    case 's':
+      return cur_row + 2;
+    case 'a':
+      return cur_row;
+    case 'd':
+      return cur_row;
+    default:
+      return 27;
+  }
 }
 
 bool Tank::checkWinning() {
@@ -189,159 +412,7 @@ bool Tank::checkWinning() {
       return (WN == STAR) || (ES == STAR);
     case 'd':
       return (NE == STAR) || (ES == STAR);
-  }
-}
-
-void Tank::move(char dst_dir) {
-  if (dst_dir == cur_dir) {
-    if (checkGoing()) {
-      eraseTank();
-      switch (cur_dir) {
-        case 'w':
-          cur_row--;
-          break;
-        case 's':
-          cur_row++;
-          break;
-        case 'a':
-          cur_col--;
-          break;
-        case 'd':
-          cur_col++;
-          break;
-      }
-      printTank();
-    }
-  } else {
-    if (dst_dir == 'w' || dst_dir == 'a' || dst_dir == 's' || dst_dir == 'd') {
-      if (checkTurning(dst_dir)) {
-        eraseTank();
-        cur_dir = dst_dir;
-        printTank();
-      }
-    }
-  }
-  if (checkWinning()) {
-    printWin();
-  }
-}
-
-void Tank::animateBiu(EnumSpeed biuspeed) {
-  bool mark = 1;
-  switch (cur_dir) {
-    case 'w':
-    case 's':
-      switch (cur_dir) {
-        case 'w':
-          for (int r = cur_row - 2; (r > 0) && mark; r--) {
-            printBiu(cur_col, r);
-            switch (MAP[r][cur_col]) {
-              case BLOCK:
-                Sleep(200 - biuspeed);
-                printBlank(cur_col, r);
-                MAP[r][cur_col]++;
-                mark = 0;
-                break;
-              case WALL:
-                printBlock(cur_col, r);
-                MAP[r][cur_col]++;
-                mark = 0;
-                break;
-              case BLANK:
-                Sleep(200 - biuspeed);
-                printBlank(cur_col, r);
-                break;
-              case STAR:
-                printStar(cur_col, r);
-                mark = 0;
-                break;
-            }
-          }
-          break;
-        case 's':
-          for (int r = cur_row + 2; (r < 19) && mark; r++) {
-            printBiu(cur_col, r);
-            switch (MAP[r][cur_col]) {
-              case BLOCK:
-                Sleep(200 - biuspeed);
-                printBlank(cur_col, r);
-                MAP[r][cur_col]++;
-                mark = 0;
-                break;
-              case WALL:
-                printBlock(cur_col, r);
-                MAP[r][cur_col]++;
-                mark = 0;
-                break;
-              case BLANK:
-                Sleep(200 - biuspeed);
-                printBlank(cur_col, r);
-                break;
-              case STAR:
-                printStar(cur_col, r);
-                mark = 0;
-                break;
-            }
-          }
-          break;
-      }
-      break;
-    case 'a':
-    case 'd':
-      switch (cur_dir) {
-        case 'a':
-          for (int c = cur_col - 2; (c > 0) && mark; c--) {
-            printBiu(c, cur_row);
-            switch (MAP[cur_row][c]) {
-              case BLOCK:
-                Sleep(200 - biuspeed);
-                printBlank(c, cur_row);
-                MAP[cur_row][c]++;
-                mark = 0;
-                break;
-              case WALL:
-                printBlock(c, cur_row);
-                MAP[cur_row][c]++;
-                mark = 0;
-                break;
-              case BLANK:
-                Sleep(200 - biuspeed);
-                printBlank(c, cur_row);
-                break;
-              case STAR:
-                printStar(c, cur_row);
-                mark = 0;
-                break;
-            }
-          }
-          break;
-        case 'd':
-          for (int c = cur_col + 2; (c < 43) && mark; c++) {
-            printBiu(c, cur_row);
-            switch (MAP[cur_row][c]) {
-              case BLOCK:
-                Sleep(200 - biuspeed);
-                printBlank(c, cur_row);
-                MAP[cur_row][c]++;
-                mark = 0;
-                break;
-              case WALL:
-                printBlock(c, cur_row);
-                MAP[cur_row][c]++;
-                mark = 0;
-                break;
-              case BLANK:
-                Sleep(200 - biuspeed);
-                printBlank(c, cur_row);
-                break;
-              case STAR:
-                printStar(c, cur_row);
-                mark = 0;
-                break;
-            }
-          }
-          break;
-      }
-      break;
+    default:
+      return false;
   }
 }

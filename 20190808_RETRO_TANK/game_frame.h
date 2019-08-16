@@ -24,12 +24,16 @@ inline void gotoxy(unsigned short x, unsigned short y) {
 // like 'Block' and 'Blank', etc.
 class GameFrame {
 private:
-  void printChar(double col, double row, string str);
-  void printBlock(double col, double row);
-  void printBlank(double col, double row);
-  void printWall(double col, double row);
-  void printStar(double col, double row);
-  void printUnkown(double col, double row);
+  //const unsigned short BORDER_LEFT = MARGIN_LEFT;
+  //const unsigned short BORDER_RIGHT = MARGIN_LEFT + 2*COLS + 1;
+  //const unsigned short BORDER_UP = MARGIN_UP;
+  //const unsigned short BORDER_DOWN = MARGIN_UP + ROWS + 1;
+  void printChar(unsigned short col, unsigned short row, string str);
+  void printBlock(unsigned short col, unsigned short row);
+  void printBlank(unsigned short col, unsigned short row);
+  void printWall(unsigned short col, unsigned short row);
+  void printStar(unsigned short col, unsigned short row);
+  void printUnkown(unsigned short col, unsigned short row);
 public:
   void printFrame();
   void printMap();

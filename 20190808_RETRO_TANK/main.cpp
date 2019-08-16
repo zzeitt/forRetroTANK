@@ -2,7 +2,7 @@
 
 int main() {
   GameLoop g_loop;
+  g_loop.mainLoop();
   
-  //cin.get();
   return 0;
 }
