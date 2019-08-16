@@ -53,46 +53,30 @@ void Biu::printBiu() {
 
 void Biu::eraseBiu() { printBlank(cur_col, cur_row); }
 
-bool Biu::checkGoing() {
-  if (MAP[cur_row][cur_col] == BLOCK || MAP[cur_row][cur_col] == WALL ||
-      MAP[cur_row][cur_col] == STAR) {
-    return false;
-  } else {
-    bool b_forward;
-    switch (cur_dir) {
-      case 'w':
-        b_forward = (N == BLANK);
-        break;
-      case 'a':
-        b_forward = (W == BLANK);
-        break;
-      case 's':
-        b_forward = (S == BLANK);
-        break;
-      case 'd':
-        b_forward = (E == BLANK);
-        break;
-      default:
-        b_forward = false;
+bool Biu::checkStaying() {
+  if (cur_col >= 1 && cur_col <= COLS && cur_row >= 1 && cur_row <= ROWS) {
+    if (C == BLANK) {
+      return true;
     }
-    return b_forward;
   }
+  return false;
 }
 
-void Biu::move() {
-  if (cur_col >= 1 && cur_col <= COLS && cur_row >= 1 && cur_row <= ROWS) {
-    int duration;
-    if (first_mark) {  // If this is the first move.
-      time_this = high_resolution_clock::now();
-      duration = MAX_SPEED;
+void Biu::autoFly() {
+  if (checkStaying()) {
+    // If can stay at current position.
+    printBiu();
+    time_this = high_resolution_clock::now();
+    if (first_mark) {
+      time_last = time_this;
+      first_mark = false;
     } else {
-      time_this = high_resolution_clock::now();
-      duration =
+      int duration =
           (int)duration_cast<milliseconds>(time_this - time_last).count();
-    }
-    if (duration >= (MAX_SPEED - speed)) {
-      if (checkGoing()) {  // If confront with BLANK.
+      if (duration >= (MAX_SPEED - speed)) {
+        // After gap time.
         eraseBiu();
+        time_last = time_this;
         switch (cur_dir) {
           case 'w':
             cur_row--;
@@ -109,28 +93,27 @@ void Biu::move() {
           default:
             break;
         }
-        printBiu();
-        time_last = time_this;
-        first_mark = false;
-      } else {  // If confront with non-BLANK.
-        // eraseBiu();
-        // handleHit();
-        b_alife = false;
       }
     }
   } else {
+    // If can't stay at current position.
+    switch (C) {
+      case BLOCK:
+        C++;
+        printBlank(cur_col, cur_row);
+        break;
+      case WALL:
+        C++;
+        printBlock(cur_col, cur_row);
+        break;
+      default:
+        break;
+    }
     b_alife = false;
   }
 }
 
 bool Biu::isAlife() { return b_alife; }
-
-void Biu::handleDeath()
-{
-  if (!b_alife) {
-
-  }
-}
 
 /******** Tank ********/
 Tank::Tank() {
@@ -263,37 +246,37 @@ bool Tank::checkTurning(char dst_dir) {
   switch (cur_dir) {
     case 'w':
       b_cur = (WN == BLANK) * (N == BLANK) * (NE == BLANK) * (W == BLANK) *
-              (MAP[cur_row][cur_col] == BLANK) * (E == BLANK);
+              (C == BLANK) * (E == BLANK);
       break;
     case 'a':
-      b_cur = (WN == BLANK) * (N == BLANK) * (W == BLANK) *
-              (MAP[cur_row][cur_col] == BLANK) * (SW == BLANK) * (S == BLANK);
+      b_cur = (WN == BLANK) * (N == BLANK) * (W == BLANK) * (C == BLANK) *
+              (SW == BLANK) * (S == BLANK);
       break;
     case 's':
-      b_cur = (W == BLANK) * (MAP[cur_row][cur_col] == BLANK) * (E == BLANK) *
-              (SW == BLANK) * (S == BLANK) * (ES == BLANK);
+      b_cur = (W == BLANK) * (C == BLANK) * (E == BLANK) * (SW == BLANK) *
+              (S == BLANK) * (ES == BLANK);
       break;
     case 'd':
-      b_cur = (N == BLANK) * (NE == BLANK) * (MAP[cur_row][cur_col] == BLANK) *
-              (E == BLANK) * (S == BLANK) * (ES == BLANK);
+      b_cur = (N == BLANK) * (NE == BLANK) * (C == BLANK) * (E == BLANK) *
+              (S == BLANK) * (ES == BLANK);
       break;
   }
   switch (dst_dir) {
     case 'w':
       b_dst = (WN == BLANK) * (N == BLANK) * (NE == BLANK) * (W == BLANK) *
-              (MAP[cur_row][cur_col] == BLANK) * (E == BLANK);
+              (C == BLANK) * (E == BLANK);
       break;
     case 'a':
-      b_dst = (WN == BLANK) * (N == BLANK) * (W == BLANK) *
-              (MAP[cur_row][cur_col] == BLANK) * (SW == BLANK) * (S == BLANK);
+      b_dst = (WN == BLANK) * (N == BLANK) * (W == BLANK) * (C == BLANK) *
+              (SW == BLANK) * (S == BLANK);
       break;
     case 's':
-      b_dst = (W == BLANK) * (MAP[cur_row][cur_col] == BLANK) * (E == BLANK) *
-              (SW == BLANK) * (S == BLANK) * (ES == BLANK);
+      b_dst = (W == BLANK) * (C == BLANK) * (E == BLANK) * (SW == BLANK) *
+              (S == BLANK) * (ES == BLANK);
       break;
     case 'd':
-      b_dst = (N == BLANK) * (NE == BLANK) * (MAP[cur_row][cur_col] == BLANK) *
-              (E == BLANK) * (S == BLANK) * (ES == BLANK);
+      b_dst = (N == BLANK) * (NE == BLANK) * (C == BLANK) * (E == BLANK) *
+              (S == BLANK) * (ES == BLANK);
       break;
   }
   return b_cur * b_dst;
@@ -305,18 +288,22 @@ bool Tank::checkGoing() {
     case 'w':
       b_forward =
           (WN == BLANK) * (NE == BLANK) * (MAP[cur_row - 2][cur_col] == BLANK);
+      b_forward &= ((cur_row - 1) >= 1);
       break;
     case 'a':
       b_forward =
           (WN == BLANK) * (SW == BLANK) * (MAP[cur_row][cur_col - 2] == BLANK);
+      b_forward &= ((cur_col - 1) >= 1);
       break;
     case 's':
       b_forward =
           (SW == BLANK) * (ES == BLANK) * (MAP[cur_row + 2][cur_col] == BLANK);
+      b_forward &= ((cur_row + 1) <= ROWS);
       break;
     case 'd':
       b_forward =
           (NE == BLANK) * (ES == BLANK) * (MAP[cur_row][cur_col + 2] == BLANK);
+      b_forward &= ((cur_col + 1) <= COLS);
       break;
     default:
       b_forward = false;

@@ -28,11 +28,11 @@ void GameFrame::printFrame() {
   cout << "¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î¡î";
   gotoxy(MARGIN_LEFT, MARGIN_UP);
   for (int c = 0; c <= COLS + 1; c++) {
-    printBlock(c, 0);  // upper border
+    printBlock(c, 0);         // upper border
     printBlock(c, ROWS + 1);  // lower border
   }
   for (int i = 1; i <= ROWS + 1; i++) {
-    printBlock(0, i);  // left border
+    printBlock(0, i);         // left border
     printBlock(COLS + 1, i);  // right border
   }
 }
@@ -61,3 +61,21 @@ void GameFrame::printMap() {
 }
 
 void GameFrame::clearScreen() { system("cls"); }
+
+void clearBase() {
+  gotoxy(MARGIN_LEFT, MARGIN_BASELINE);
+  cout << "                                                                    "
+          "                ";
+}
+
+void outputBase(string s) {
+  clearBase();
+  gotoxy(MARGIN_LEFT, MARGIN_BASELINE);
+  cout << s;
+}
+
+void outputBase(int i) {
+  clearBase();
+  gotoxy(MARGIN_LEFT, MARGIN_BASELINE);
+  cout << i;
+}

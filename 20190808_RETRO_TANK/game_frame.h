@@ -40,3 +40,7 @@ public:
   void clearScreen();
 };
 
+/***** Debug function *****/
+void clearBase();
+void outputBase(string s);
+void outputBase(int i);

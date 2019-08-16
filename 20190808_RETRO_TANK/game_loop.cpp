@@ -34,7 +34,7 @@ void GameLoop::mainLoop() {
       if (!v_biu.empty()) {
         for (vector<Biu>::iterator it = v_biu.begin(); it != v_biu.end();) {
           if ((*it).isAlife()) {
-            (*it).move();
+            (*it).autoFly();
             it++;
           } else {
             it = v_biu.erase(it);
@@ -54,7 +54,7 @@ void GameLoop::mainLoop() {
         if (kb == 'w' || 'a' || 's' || 'd') {
           tk.move(kb);
         }
-      } else {  // If _kbhit() failed.
+      } else {  // If no _kbhit().
         gotoxy(MARGIN_LEFT, MARGIN_BASELINE);
       }
       ///////////// Handle Winning /////////////

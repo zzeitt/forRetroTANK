@@ -17,6 +17,7 @@ using namespace std::chrono;
 #define SW MAP[cur_row + 1][cur_col - 1]
 #define W MAP[cur_row][cur_col - 1]
 #define WN MAP[cur_row - 1][cur_col - 1]
+#define C MAP[cur_row][cur_col]
 
 /***** Enumerated Speed *****/
 const int MAX_SPEED = 200;
@@ -64,14 +65,13 @@ class Biu {
   void printBiu();
   void eraseBiu();
   // Checking function(s).
-  bool checkGoing();
+  bool checkStaying();
 
  public:
   Biu(char ch_dir, int c, int r);
   Biu(char ch_dir, int c, int r, EnumSpeed v, BiuType t);
-  void move();
+  void autoFly();
   bool isAlife();
-  void handleDeath();
 };
 
 /***** Class of Tank *****/
