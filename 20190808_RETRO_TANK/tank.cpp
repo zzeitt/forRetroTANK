@@ -1,17 +1,8 @@
 #include "tank.h"
 
 /******** Biu ********/
-Biu::Biu(char ch_dir, int c, int r) {
-  first_mark = true;
-  b_alife = true;
-  cur_dir = ch_dir;
-  cur_col = c;
-  cur_row = r;
-  speed = FAST;
-  type = biu_a;
-}
-
-Biu::Biu(char ch_dir, int c, int r, EnumSpeed v, BiuType t) {
+Biu::Biu(char ch_dir, unsigned short c, unsigned short r, EnumSpeed v,
+         BiuType t) {
   first_mark = true;
   b_alife = true;
   cur_dir = ch_dir;
@@ -122,31 +113,26 @@ void Biu::autoFly() {
 bool Biu::isAlife() { return b_alife; }
 
 /******** Tank ********/
-Tank::Tank() {
-  first_mark = true;
-  cur_dir = 'w';
-  cur_col = 20;
-  cur_row = 9;
-  speed = FAST;
-  gun_type = gun_a;
-  printTank();
-  MAP[cur_row][cur_col] = BLANK;
-}
-
-Tank::Tank(char ch_dir, int c, int r, EnumSpeed v, GunType gun) {
+Tank::Tank(bool rob, char ch_dir, unsigned short c, unsigned short r,
+           EnumSpeed v, GunType gun, unsigned short bm, EnumSpeed bs,
+           BiuType bt) {
+  b_robort = rob;
   first_mark = true;
   cur_dir = ch_dir;
   cur_col = c;
   cur_row = r;
   speed = v;
   gun_type = gun;
+  biu_max = bm;
+  biu_speed = bs;
+  biu_type = bt;
   printTank();
-  MAP[cur_row][cur_col] = BLANK;
 }
 
 void Tank::printChar(unsigned short col, unsigned short row, string str) {
   gotoxy(2 * col + MARGIN_LEFT, row + MARGIN_UP);
   cout << str;
+  MAP[row][col] = BLANK;
 }
 
 void Tank::printBlock(unsigned short col, unsigned short row) {
@@ -420,17 +406,4 @@ void Tank::checkBorders() {
   }
 }
 
-bool Tank::checkWinning() {
-  switch (cur_dir) {
-    case 'w':
-      return (WN == STAR) || (NE == STAR);
-    case 's':
-      return (SW == STAR) || (ES == STAR);
-    case 'a':
-      return (WN == STAR) || (ES == STAR);
-    case 'd':
-      return (NE == STAR) || (ES == STAR);
-    default:
-      return false;
-  }
-}
+bool Tank::isRobort() { return b_robort; }

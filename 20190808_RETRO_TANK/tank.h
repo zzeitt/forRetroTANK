@@ -4,6 +4,7 @@
 #include <chrono>
 #include <iostream>
 #include <string>
+#include <vector>
 #include "game_frame.h"
 
 using namespace std;
@@ -68,8 +69,7 @@ class Biu {
   bool checkStaying();
 
  public:
-  Biu(char ch_dir, int c, int r);
-  Biu(char ch_dir, int c, int r, EnumSpeed v, BiuType t);
+  Biu(char ch_dir, unsigned short c, unsigned short r, EnumSpeed v, BiuType t);
   void autoFly();
   bool isAlife();
 };
@@ -77,6 +77,7 @@ class Biu {
 /***** Class of Tank *****/
 class Tank {
  private:
+  bool b_robort;
   bool first_mark;
   high_resolution_clock::time_point time_last;
   high_resolution_clock::time_point time_this;
@@ -103,12 +104,17 @@ class Tank {
   bool checkGoing();
 
  public:
-  Tank();
-  Tank(char ch_dir, int c, int r, EnumSpeed v, GunType gun);
+  unsigned short biu_max;
+  EnumSpeed biu_speed;
+  BiuType biu_type;
+  std::vector<Biu> v_biu;
+
+  Tank(bool rob, char ch_dir, unsigned short c, unsigned short r, EnumSpeed v,
+       GunType gun, unsigned short bm, EnumSpeed bs, BiuType bt);
   void move(char dst_dir);
   char getDirection();
   int getBiuColNum();
   int getBiuRowNum();
   void checkBorders();
-  bool checkWinning();
+  bool isRobort();
 };
