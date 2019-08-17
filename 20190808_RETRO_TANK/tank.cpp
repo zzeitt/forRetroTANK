@@ -51,12 +51,18 @@ void Biu::printBiu() {
   }
 }
 
-void Biu::eraseBiu() { printBlank(cur_col, cur_row); }
+void Biu::eraseBiu() {
+  if (cur_col >= 1 && cur_col <= COLS && cur_row >= 1 && cur_row <= ROWS) {
+    printBlank(cur_col, cur_row);
+  }
+}
 
 bool Biu::checkStaying() {
   if (cur_col >= 1 && cur_col <= COLS && cur_row >= 1 && cur_row <= ROWS) {
-    if (C == BLANK) {
-      return true;
+    if (C != FRAME) {
+      if (C == BLANK) {
+        return true;
+      }
     }
   }
   return false;

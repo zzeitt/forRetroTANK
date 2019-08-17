@@ -26,7 +26,6 @@ void GameLoop::mainLoop() {
   // Initialize a tank and a queue of bullets.
   std::vector<Biu> v_biu;
   Tank tk(tank_dir, tank_col, tank_row, tank_speed, tank_gun);
-  //MAP[tank_row][tank_col] = BLANK;
   // Listening keyboard.
   char kb = '?';
   do {

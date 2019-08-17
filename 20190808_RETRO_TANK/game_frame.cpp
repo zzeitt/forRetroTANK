@@ -26,23 +26,24 @@ void GameFrame::printFrame() {
   cout << "                           你已成功进入坦克深渊，开战吧！";
   gotoxy(MARGIN_LEFT, 1);
   cout << "☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆";
-  gotoxy(MARGIN_LEFT, MARGIN_UP);
-  for (int c = 0; c <= COLS + 1; c++) {
-    printBlock(c, 0);         // upper border
-    printBlock(c, ROWS + 1);  // lower border
-  }
-  for (int i = 1; i <= ROWS + 1; i++) {
-    printBlock(0, i);         // left border
-    printBlock(COLS + 1, i);  // right border
-  }
+  /*gotoxy(MARGIN_LEFT, 2);
+  cout << "01  03  05  07  09  11  13  15  17  19  21  23  25  27  29  31  33  "
+          "35  37  39  41  43  ";
+  gotoxy(MARGIN_LEFT, 3);
+  cout << "  02  04  06  08  10  12  14  16  18  20  22  24  26  28  30  32  "
+          "34  36  38  40  42  44";*/
 }
 
 unsigned int GameFrame::printMap() {
-  // default column is 3, default row is 11
+  gotoxy(MARGIN_LEFT, MARGIN_UP);
+  // default tank HOUSE column is 3, default row is 11
   unsigned int col_temp = 3, row_temp = 11;
-  for (int c = 1; c <= COLS; c++) {
-    for (int r = 1; r <= ROWS; r++) {
+  for (int c = 0; c <= COLS + 1; c++) {
+    for (int r = 0; r <= ROWS + 1; r++) {
       switch (MAP[r][c]) {
+        case FRAME:
+          printBlock(c, r);
+          break;
         case BLANK:
           printBlank(c, r);
           break;
