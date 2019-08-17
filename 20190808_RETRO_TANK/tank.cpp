@@ -124,6 +124,7 @@ Tank::Tank() {
   speed = FAST;
   gun_type = gun_a;
   printTank();
+  MAP[cur_row][cur_col] = BLANK;
 }
 
 Tank::Tank(char ch_dir, int c, int r, EnumSpeed v, GunType gun) {
@@ -134,6 +135,7 @@ Tank::Tank(char ch_dir, int c, int r, EnumSpeed v, GunType gun) {
   speed = v;
   gun_type = gun;
   printTank();
+  MAP[cur_row][cur_col] = BLANK;
 }
 
 void Tank::printChar(unsigned short col, unsigned short row, string str) {

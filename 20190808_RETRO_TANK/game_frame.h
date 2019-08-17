@@ -33,10 +33,10 @@ private:
   void printBlank(unsigned short col, unsigned short row);
   void printWall(unsigned short col, unsigned short row);
   void printStar(unsigned short col, unsigned short row);
-  void printUnkown(unsigned short col, unsigned short row);
+  void printUnknown(unsigned short col, unsigned short row);
 public:
   void printFrame();
-  void printMap();
+  unsigned int printMap();
   void clearScreen();
 };
 

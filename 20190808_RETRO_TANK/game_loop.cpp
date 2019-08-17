@@ -2,11 +2,11 @@
 
 GameLoop::GameLoop() {
   g_frame.printFrame();
-  g_frame.printMap();
+  unsigned int trick_num = g_frame.printMap();
   // Default settings for Tank.
   tank_dir = 'a';
-  tank_col = 20;
-  tank_row = 9;
+  tank_col = trick_num / FACTOR_MID;
+  tank_row = trick_num % FACTOR_MID;
   tank_speed = FAST;
   tank_gun = gun_a;
   // Default settings for Bullets.
@@ -26,6 +26,7 @@ void GameLoop::mainLoop() {
   // Initialize a tank and a queue of bullets.
   std::vector<Biu> v_biu;
   Tank tk(tank_dir, tank_col, tank_row, tank_speed, tank_gun);
+  //MAP[tank_row][tank_col] = BLANK;
   // Listening keyboard.
   char kb = '?';
   do {

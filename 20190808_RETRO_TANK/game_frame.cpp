@@ -17,7 +17,7 @@ void GameFrame::printWall(unsigned short col, unsigned short row) {
 void GameFrame::printStar(unsigned short col, unsigned short row) {
   printChar(col, row, "бя");
 }
-void GameFrame::printUnkown(unsigned short col, unsigned short row) {
+void GameFrame::printUnknown(unsigned short col, unsigned short row) {
   printChar(col, row, "г┐");
 }
 
@@ -37,7 +37,9 @@ void GameFrame::printFrame() {
   }
 }
 
-void GameFrame::printMap() {
+unsigned int GameFrame::printMap() {
+  // default column is 3, default row is 11
+  unsigned int col_temp = 3, row_temp = 11;
   for (int c = 1; c <= COLS; c++) {
     for (int r = 1; r <= ROWS; r++) {
       switch (MAP[r][c]) {
@@ -53,11 +55,17 @@ void GameFrame::printMap() {
         case STAR:
           printStar(c, r);
           break;
+        case HOUSE:
+          col_temp = c;
+          row_temp = r;
+          printUnknown(c, r);
+          break;
         default:
-          printUnkown(c, r);
+          printUnknown(c, r);
       }
     }
   }
+  return col_temp * FACTOR_MID + row_temp;
 }
 
 void GameFrame::clearScreen() { system("cls"); }

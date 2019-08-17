@@ -4,3 +4,6 @@
 *.vcxproj.filters
 */Debug/*
 .vs/*
+
+# Ignore Excel file
+*.xlsx
