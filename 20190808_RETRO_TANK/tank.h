@@ -106,19 +106,21 @@ class Tank {
   // Checking functions.
   bool checkTurning(char dst_dir);
   bool checkGoing();
+  // Set bullet source position
+  void setBiuSource(unsigned short col, unsigned short row);
 
  public:
   unsigned short biu_max;
   EnumSpeed biu_speed;
   BiuType biu_type;
+  unsigned short biu_source_col;
+  unsigned short biu_source_row;
   std::vector<Biu> v_biu;
 
   Tank(bool rob, char ch_dir, unsigned short c, unsigned short r, EnumSpeed v,
        GunType gun, unsigned short bm, EnumSpeed bs, BiuType bt);
   void move(char dst_dir);
-  char getDirection();
-  int getBiuColNum();
-  int getBiuRowNum();
+  void shoot();
   void checkBorders();
   bool isRobort();
 };

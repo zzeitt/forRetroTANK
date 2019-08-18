@@ -71,12 +71,7 @@ void GameLoop::mainLoop() {
         if (_kbhit()) {
           kb = _getch();
           if (kb == 'j') {
-            if ((*it_t).v_biu.size() <= (*it_t).biu_max) {
-              Biu biu_temp((*it_t).getDirection(), (*it_t).getBiuColNum(),
-                           (*it_t).getBiuRowNum(), (*it_t).biu_speed,
-                           (*it_t).biu_type);
-              (*it_t).v_biu.push_back(biu_temp);
-            }
+            (*it_t).shoot();
           }
           if (kb == 'w' || 'a' || 's' || 'd') {
             (*it_t).move(kb);

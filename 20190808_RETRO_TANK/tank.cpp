@@ -185,9 +185,11 @@ void Tank::printTank() {
       switch (cur_dir) {
         case 'w':
           printGunVer(cur_col, cur_row - 1);
+          setBiuSource(cur_col, cur_row - 2);  // set bullet source position
           break;
         case 's':
           printGunVer(cur_col, cur_row + 1);
+          setBiuSource(cur_col, cur_row + 2);
           break;
       }
       break;
@@ -197,11 +199,16 @@ void Tank::printTank() {
       switch (cur_dir) {
         case 'a':
           printGunHor(cur_col - 1, cur_row);
+          setBiuSource(cur_col - 2, cur_row);
           break;
         case 'd':
           printGunHor(cur_col + 1, cur_row);
+          setBiuSource(cur_col + 2, cur_row);
           break;
       }
+      break;
+    default:
+      setBiuSource(MARGIN_LEFT, MARGIN_BASELINE);
       break;
   }
 }
@@ -320,6 +327,11 @@ bool Tank::checkGoing() {
   return b_forward;
 }
 
+void Tank::setBiuSource(unsigned short col, unsigned short row) {
+  biu_source_col = col;
+  biu_source_row = row;
+}
+
 void Tank::move(char dst_dir) {
   double duration;
   if (first_mark) {  // If this is the first move.
@@ -366,35 +378,10 @@ void Tank::move(char dst_dir) {
   }
 }
 
-char Tank::getDirection() { return cur_dir; }
-
-int Tank::getBiuColNum() {
-  switch (cur_dir) {
-    case 'w':
-      return cur_col;
-    case 's':
-      return cur_col;
-    case 'a':
-      return cur_col - 2;
-    case 'd':
-      return cur_col + 2;
-    default:
-      return 0;
-  }
-}
-
-int Tank::getBiuRowNum() {
-  switch (cur_dir) {
-    case 'w':
-      return cur_row - 2;
-    case 's':
-      return cur_row + 2;
-    case 'a':
-      return cur_row;
-    case 'd':
-      return cur_row;
-    default:
-      return 27;
+void Tank::shoot() {
+  if (v_biu.size() <= biu_max) {
+    Biu biu_temp(cur_dir, biu_source_col, biu_source_row, biu_speed, biu_type);
+    v_biu.push_back(biu_temp);
   }
 }
 
