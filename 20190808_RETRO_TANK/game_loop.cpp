@@ -82,7 +82,7 @@ void GameLoop::mainLoop() {
       } else {
         ///////////// Handle Robort /////////////
         srand(time(NULL));
-        int i_rand = rand() % 5;
+        int i_rand = rand() % 6;
         switch (i_rand) {
           case 0:
             break;
@@ -98,6 +98,8 @@ void GameLoop::mainLoop() {
           case 4:
             (*it_t).move('d');
             break;
+          case 5:
+            (*it_t).shoot();
           default:
             break;
         }
