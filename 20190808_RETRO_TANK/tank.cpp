@@ -4,6 +4,7 @@
 Biu::Biu(char ch_dir, unsigned short c, unsigned short r, EnumSpeed v,
          BiuType t) {
   first_mark = true;
+  b_hit_tank = false;
   b_alife = true;
   cur_dir = ch_dir;
   cur_col = c;
@@ -11,6 +12,8 @@ Biu::Biu(char ch_dir, unsigned short c, unsigned short r, EnumSpeed v,
   speed = v;
   type = t;
 }
+
+bool Biu::hitTank() { return b_hit_tank; }
 
 void Biu::printChar(unsigned short col, unsigned short row, string str) {
   gotoxy(2 * col + MARGIN_LEFT, row + MARGIN_UP);
@@ -59,6 +62,25 @@ bool Biu::checkStaying() {
   return false;
 }
 
+void Biu::handleHit() {
+  switch (C) {
+    case BLOCK:
+      C++;
+      printBlank(cur_col, cur_row);
+      break;
+    case WALL:
+      C++;
+      printBlock(cur_col, cur_row);
+      break;
+    case TANK:
+      b_hit_tank = true;
+      break;
+    default:
+      break;
+  }
+  b_alife = false;
+}
+
 void Biu::autoFly() {
   if (checkStaying()) {
     // If can stay at current position.
@@ -94,19 +116,7 @@ void Biu::autoFly() {
     }
   } else {
     // If can't stay at current position.
-    switch (C) {
-      case BLOCK:
-        C++;
-        printBlank(cur_col, cur_row);
-        break;
-      case WALL:
-        C++;
-        printBlock(cur_col, cur_row);
-        break;
-      default:
-        break;
-    }
-    b_alife = false;
+    handleHit();
   }
 }
 
@@ -132,7 +142,6 @@ Tank::Tank(bool rob, char ch_dir, unsigned short c, unsigned short r,
 void Tank::printChar(unsigned short col, unsigned short row, string str) {
   gotoxy(2 * col + MARGIN_LEFT, row + MARGIN_UP);
   cout << str;
-  MAP[row][col] = BLANK;
 }
 
 void Tank::printBlock(unsigned short col, unsigned short row) {
@@ -140,6 +149,7 @@ void Tank::printBlock(unsigned short col, unsigned short row) {
 }
 
 void Tank::printBlank(unsigned short col, unsigned short row) {
+  MAP[row][col] = BLANK;  // Everywhere tank has passed will be set BLANK.
   printChar(col, row, "  ");
 }
 
@@ -163,6 +173,7 @@ void Tank::printGunHor(unsigned short col, unsigned short row) {
 
 void Tank::printTank() {
   printBlock(cur_col, cur_row);  // Body of TANK.
+  MAP[cur_row][cur_col] = TANK;
   switch (cur_dir) {
     case 'w':
     case 's':
@@ -240,37 +251,37 @@ bool Tank::checkTurning(char dst_dir) {
   switch (cur_dir) {
     case 'w':
       b_cur = (WN == BLANK) * (N == BLANK) * (NE == BLANK) * (W == BLANK) *
-              (C == BLANK) * (E == BLANK);
+              (C == BLANK || C == TANK) * (E == BLANK);
       break;
     case 'a':
-      b_cur = (WN == BLANK) * (N == BLANK) * (W == BLANK) * (C == BLANK) *
-              (SW == BLANK) * (S == BLANK);
+      b_cur = (WN == BLANK) * (N == BLANK) * (W == BLANK) *
+              (C == BLANK || C == TANK) * (SW == BLANK) * (S == BLANK);
       break;
     case 's':
-      b_cur = (W == BLANK) * (C == BLANK) * (E == BLANK) * (SW == BLANK) *
-              (S == BLANK) * (ES == BLANK);
+      b_cur = (W == BLANK) * (C == BLANK || C == TANK) * (E == BLANK) *
+              (SW == BLANK) * (S == BLANK) * (ES == BLANK);
       break;
     case 'd':
-      b_cur = (N == BLANK) * (NE == BLANK) * (C == BLANK) * (E == BLANK) *
-              (S == BLANK) * (ES == BLANK);
+      b_cur = (N == BLANK) * (NE == BLANK) * (C == BLANK || C == TANK) *
+              (E == BLANK) * (S == BLANK) * (ES == BLANK);
       break;
   }
   switch (dst_dir) {
     case 'w':
       b_dst = (WN == BLANK) * (N == BLANK) * (NE == BLANK) * (W == BLANK) *
-              (C == BLANK) * (E == BLANK);
+              (C == BLANK || C == TANK) * (E == BLANK);
       break;
     case 'a':
-      b_dst = (WN == BLANK) * (N == BLANK) * (W == BLANK) * (C == BLANK) *
-              (SW == BLANK) * (S == BLANK);
+      b_dst = (WN == BLANK) * (N == BLANK) * (W == BLANK) *
+              (C == BLANK || C == TANK) * (SW == BLANK) * (S == BLANK);
       break;
     case 's':
-      b_dst = (W == BLANK) * (C == BLANK) * (E == BLANK) * (SW == BLANK) *
-              (S == BLANK) * (ES == BLANK);
+      b_dst = (W == BLANK) * (C == BLANK || C == TANK) * (E == BLANK) *
+              (SW == BLANK) * (S == BLANK) * (ES == BLANK);
       break;
     case 'd':
-      b_dst = (N == BLANK) * (NE == BLANK) * (C == BLANK) * (E == BLANK) *
-              (S == BLANK) * (ES == BLANK);
+      b_dst = (N == BLANK) * (NE == BLANK) * (C == BLANK || C == TANK) *
+              (E == BLANK) * (S == BLANK) * (ES == BLANK);
       break;
   }
   return b_cur * b_dst;

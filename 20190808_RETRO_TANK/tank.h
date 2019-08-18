@@ -48,6 +48,7 @@ static BiuType biu_a = {"oo", " 8", "8 "}, biu_b = {"¨E", "£º", "£º"};
 class Biu {
  private:
   bool first_mark;
+  bool b_hit_tank;
   bool b_alife;
   high_resolution_clock::time_point time_last;
   high_resolution_clock::time_point time_this;
@@ -67,9 +68,12 @@ class Biu {
   void eraseBiu();
   // Checking function(s).
   bool checkStaying();
+  // Handle hitting event.
+  void handleHit();
 
  public:
   Biu(char ch_dir, unsigned short c, unsigned short r, EnumSpeed v, BiuType t);
+  bool hitTank();
   void autoFly();
   bool isAlife();
 };
