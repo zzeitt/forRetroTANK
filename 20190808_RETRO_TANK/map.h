@@ -33,4 +33,13 @@ static int MAP[ROWS + 2][COLS + 2] = {
 };
 
 /***** Enumerated Map's Elements *****/
-enum MapElement { STAR = -6, WALL = -1, BLOCK = 0, BLANK = 1, HOUSE = 7, FRAME = 9 };
+enum MapElement {
+  TANK = -9,
+  STAR = -6,
+  WALL = -1,
+  BLOCK = 0,
+  ////////////////////////
+  BLANK = 1,
+  HOUSE = 7,
+  FRAME = 9,
+};
