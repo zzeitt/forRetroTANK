@@ -6,28 +6,39 @@ bool GameLoop::checkWinning() { return false; }
 GameLoop::GameLoop() {
   // Print jobs.
   g_frame.printFrame();
-  unsigned int trick_num = g_frame.printMap();
+  col_row_num = g_frame.printMap();
   // Player settings.
-  Player p_1, p_2;
-  p_1.setTankGun(gun_a);
-  p_1.setTankColNum(trick_num / FACTOR_MID);
-  p_1.setTankRowNum(trick_num % FACTOR_MID);
-  p_1.setAutoOperator(false);
-  p_2.setTankGun(gun_b);
-  p_2.setTankColNum(COLS - (trick_num / FACTOR_MID));
-  p_2.setTankRowNum(trick_num % FACTOR_MID);
-  p_2.setAutoOperator(true);
-  v_player.push_back(p_1);
-  v_player.push_back(p_2);
+  initPlayers();
   // Tank settings.
-  Tank tk_1(p_1.b_robort, p_1.tank_dir, p_1.tank_col, p_1.tank_row,
-            p_1.tank_speed, p_1.tank_gun, p_1.biu_max, p_1.biu_speed,
-            p_1.biu_type);
-  Tank tk_2(p_2.b_robort, p_2.tank_dir, p_2.tank_col, p_2.tank_row,
-            p_2.tank_speed, p_2.tank_gun, p_2.biu_max, p_2.biu_speed,
-            p_2.biu_type);
-  v_tank.push_back(tk_1);
-  v_tank.push_back(tk_2);
+  initTanks();
+}
+
+void GameLoop::initPlayers() {
+  // Human player p_1
+  Player p_1;
+  p_1.setTankGun(gun_a);
+  p_1.setTankColNum(col_row_num / FACTOR_MID);
+  p_1.setTankRowNum(col_row_num % FACTOR_MID);
+  p_1.setAutoOperator(false);
+  v_player.push_back(p_1);
+
+  // Robort Player p_2
+  Player p_2;
+  p_2.setTankGun(gun_b);
+  p_2.setTankColNum(COLS - (col_row_num / FACTOR_MID));
+  p_2.setTankRowNum(col_row_num % FACTOR_MID);
+  p_2.setAutoOperator(true);
+  v_player.push_back(p_2);
+}
+
+void GameLoop::initTanks() {
+  for (vector<Player>::iterator it_p = v_player.begin(); it_p != v_player.end();
+       it_p++) {
+    Tank tk_temp((*it_p).b_robort, (*it_p).tank_dir, (*it_p).tank_col,
+                 (*it_p).tank_row, (*it_p).tank_speed, (*it_p).tank_gun,
+                 (*it_p).biu_max, (*it_p).biu_speed, (*it_p).biu_type);
+    v_tank.push_back(tk_temp);
+  }
 }
 
 void GameLoop::mainLoop() {
