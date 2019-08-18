@@ -22,7 +22,7 @@ void GameLoop::initPlayers() {
   p_1.setAutoOperator(false);
   v_player.push_back(p_1);
 
-  // Robort Player p_2
+  // Robort player p_2
   Player p_2;
   p_2.setTankGun(gun_b);
   p_2.setTankColNum(COLS - (col_row_num / FACTOR_MID));
@@ -67,7 +67,7 @@ void GameLoop::mainLoop() {
         }
       }
       if (!(*it_t).isRobort()) {
-        ///////////// Handle Input /////////////
+        ///////////// Handle Human Input /////////////
         if (_kbhit()) {
           kb = _getch();
           if (kb == 'j') {

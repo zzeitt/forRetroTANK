@@ -25,23 +25,27 @@ void Biu::printBlock(unsigned short col, unsigned short row) {
 }
 
 void Biu::printBlank(unsigned short col, unsigned short row) {
+  MAP[row][col] = BLANK;  // Everywhere bullet has passed will be set BLANK.
   printChar(col, row, "  ");
 }
 
 void Biu::printBiu() {
-  switch (cur_dir) {
-    case 'w':
-      printChar(cur_col, cur_row, type.ws_biu);
-      break;
-    case 's':
-      printChar(cur_col, cur_row, type.ws_biu);
-      break;
-    case 'a':
-      printChar(cur_col, cur_row, type.a_biu);
-      break;
-    case 'd':
-      printChar(cur_col, cur_row, type.d_biu);
-      break;
+  if (cur_col >= 1 && cur_col <= COLS && cur_row >= 1 && cur_row <= ROWS) {
+    MAP[cur_row][cur_col] = BIU;  // set position as MapElement TANK
+    switch (cur_dir) {
+      case 'w':
+        printChar(cur_col, cur_row, type.ws_biu);
+        break;
+      case 's':
+        printChar(cur_col, cur_row, type.ws_biu);
+        break;
+      case 'a':
+        printChar(cur_col, cur_row, type.a_biu);
+        break;
+      case 'd':
+        printChar(cur_col, cur_row, type.d_biu);
+        break;
+    }
   }
 }
 
@@ -54,7 +58,7 @@ void Biu::eraseBiu() {
 bool Biu::checkStaying() {
   if (cur_col >= 1 && cur_col <= COLS && cur_row >= 1 && cur_row <= ROWS) {
     if (C != FRAME) {
-      if (C == BLANK) {
+      if (C == BLANK || C == BIU) {
         return true;
       }
     }
@@ -173,7 +177,7 @@ void Tank::printGunHor(unsigned short col, unsigned short row) {
 
 void Tank::printTank() {
   printBlock(cur_col, cur_row);  // Body of TANK.
-  MAP[cur_row][cur_col] = TANK;
+  MAP[cur_row][cur_col] = TANK;  // set position as MapElement TANK
   switch (cur_dir) {
     case 'w':
     case 's':

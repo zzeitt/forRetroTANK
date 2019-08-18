@@ -35,6 +35,7 @@ static int MAP[ROWS + 2][COLS + 2] = {
 /***** Enumerated Map's Elements *****/
 enum MapElement {
   TANK = -9,
+  BIU = -8,
   STAR = -6,
   WALL = -1,
   BLOCK = 0,
