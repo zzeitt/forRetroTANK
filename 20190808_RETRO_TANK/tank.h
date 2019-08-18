@@ -123,4 +123,8 @@ class Tank {
   void shoot();
   void checkBorders();
   bool isRobort();
+  char getDirection();
+  unsigned short getColNum();
+  unsigned short getRowNum();
+  unsigned int getBiuLeft();
 };

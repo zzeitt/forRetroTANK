@@ -379,7 +379,7 @@ void Tank::move(char dst_dir) {
 }
 
 void Tank::shoot() {
-  if (v_biu.size() <= biu_max) {
+  if (v_biu.size() < biu_max) {
     Biu biu_temp(cur_dir, biu_source_col, biu_source_row, biu_speed, biu_type);
     v_biu.push_back(biu_temp);
   }
@@ -409,3 +409,11 @@ void Tank::checkBorders() {
 }
 
 bool Tank::isRobort() { return b_robort; }
+
+char Tank::getDirection() { return cur_dir; }
+
+unsigned short Tank::getColNum() { return cur_col; }
+
+unsigned short Tank::getRowNum() { return cur_row; }
+
+unsigned int Tank::getBiuLeft() { return biu_max - v_biu.size(); }

@@ -5,7 +5,7 @@
 class Player {
  public:
   /****************** Variables ******************/
-   bool b_robort;
+  bool b_robort;
   // Attributes of Tank.
   char tank_dir;
   unsigned short tank_col;
@@ -27,4 +27,7 @@ class Player {
   void setBiuMaxNum(unsigned short m);
   void setBiuSpeed(EnumSpeed v);
   void setBiuType(BiuType b);
+  /****************** Automation ******************/
+  char genCommand(char cur_dir, unsigned short cur_col, unsigned short cur_row,
+                  int biu_left);
 };

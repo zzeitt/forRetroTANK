@@ -81,24 +81,18 @@ void GameLoop::mainLoop() {
         }
       } else {
         ///////////// Handle Robort /////////////
-        srand(time(NULL));
-        int i_rand = rand() % 6;
-        switch (i_rand) {
-          case 0:
+        int it_t_id = distance(v_tank.begin(), it_t);
+        char cmd = v_player[it_t_id].genCommand(
+            (*it_t).getDirection(), (*it_t).getColNum(), (*it_t).getRowNum(),
+            (*it_t).getBiuLeft());
+        switch (cmd) {
+          case 'w':
+          case 'a':
+          case 's':
+          case 'd':
+            (*it_t).move(cmd);
             break;
-          case 1:
-            (*it_t).move('w');
-            break;
-          case 2:
-            (*it_t).move('a');
-            break;
-          case 3:
-            (*it_t).move('s');
-            break;
-          case 4:
-            (*it_t).move('d');
-            break;
-          case 5:
+          case 'j':
             (*it_t).shoot();
           default:
             break;
