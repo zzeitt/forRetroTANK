@@ -21,11 +21,12 @@ using namespace std::chrono;
 #define C MAP[cur_row][cur_col]
 
 /***** Enumerated Speed *****/
-const int MAX_SPEED = 200;
+const int MAX_SPEED = 1000;
 enum EnumSpeed {
-  SO_FAST = 180,
-  FAST = 150,
-  MEDIUM = 100,
+  SO_FAST = 950,
+  FAST = 900,
+  SMOOTH = 700,
+  MEDIUM = 500,
   SLOW = 0
 };  //世界频道-速度
 

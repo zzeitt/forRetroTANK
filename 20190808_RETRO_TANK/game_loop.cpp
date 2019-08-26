@@ -16,18 +16,20 @@ GameLoop::GameLoop() {
 void GameLoop::initPlayers() {
   // Human player p_1
   Player p_1;
-  p_1.setTankGun(gun_a);
+  p_1.setAutoOperator(false);
   p_1.setTankColNum(col_row_num / FACTOR_MID);
   p_1.setTankRowNum(col_row_num % FACTOR_MID);
-  p_1.setAutoOperator(false);
+  p_1.setTankSpeed(FAST);
+  p_1.setTankGun(gun_a);
   v_player.push_back(p_1);
 
   // Robort player p_2
   Player p_2;
-  p_2.setTankGun(gun_b);
+  p_2.setAutoOperator(true);
   p_2.setTankColNum(COLS - (col_row_num / FACTOR_MID));
   p_2.setTankRowNum(col_row_num % FACTOR_MID);
-  p_2.setAutoOperator(true);
+  p_2.setTankSpeed(SMOOTH);
+  p_2.setTankGun(gun_b);
   v_player.push_back(p_2);
 }
 
