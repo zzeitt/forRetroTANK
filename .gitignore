@@ -7,3 +7,6 @@
 
 # Ignore Excel file
 *.xlsx
+
+# Ignore csv
+*.csv

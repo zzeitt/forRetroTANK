@@ -104,37 +104,6 @@ char Player::genCommand(char cur_dir, unsigned short cur_col,
     }
   }
 
-  //////////////////
-  clearBase();
-  gotoxy(MARGIN_LEFT, MARGIN_BASELINE);
-  cout << "enemy: " << enemy_col << "," << enemy_row;
-  cout << "  cur: " << cur_col << "," << cur_row;
-  cout << "  dis: " << col_dis << "," << row_dis;
-  cout << "  cur_dir: " << cur_dir;
-  cout << "  cmd: " << cmd_ret;
-  //////////////////
   return cmd_ret;
-  // Random test
-  // srand(time(NULL));
-  // int i_rand = rand() % 6;
-  // switch (i_rand) {
-  //  case 0:
-  //    return 'w';
-  //    break;
-  //  case 1:
-  //    return 'a';
-  //    break;
-  //  case 2:
-  //    return 's';
-  //    break;
-  //  case 3:
-  //    return 'd';
-  //    break;
-  //  case 4:
-  //    return 'j';
-  //    break;
-  //  default:
-  //    return '?';
-  //    break;
-  //}
+
 }
