@@ -5,4 +5,10 @@
 > Playing TANK game.
 
 ## Structure
-
+* main ⬅(entrance)
+    * game_frame
+        * game_loop
+            * map
+            * game_player
+                * Tank
+                * Biu
